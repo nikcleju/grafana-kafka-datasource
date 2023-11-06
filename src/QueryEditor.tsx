@@ -16,6 +16,11 @@ const autoResetOffsets = [
     value: AutoOffsetReset.LATEST,
     description: 'Consume from the latest offset',
   },
+  {
+    label: 'From beginning',
+    value: AutoOffsetReset.BEGINNING,
+    description: 'Consume from the beginning',
+  },
 ] as Array<SelectableValue<AutoOffsetReset>>;
 
 const timestampModes = [
@@ -61,6 +66,9 @@ export class QueryEditor extends PureComponent<Props> {
   resolveAutoResetOffset = (value: string | undefined) => {
     if (value === AutoOffsetReset.LATEST) {
       return autoResetOffsets[1];
+    }
+    if (value === AutoOffsetReset.BEGINNING) {
+      return autoResetOffsets[2];
     }
     return autoResetOffsets[0];
   };

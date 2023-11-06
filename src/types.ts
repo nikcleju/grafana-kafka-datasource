@@ -3,6 +3,7 @@ import { DataQuery, DataSourceJsonData } from '@grafana/data';
 export enum AutoOffsetReset {
   EARLIEST = 'earliest',
   LATEST = 'latest',
+  BEGINNING = 'beginning',
 }
 
 export enum TimestampMode {
