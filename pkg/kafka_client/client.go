@@ -65,6 +65,8 @@ func (client *KafkaClient) TopicAssign(topic string, partition int32, autoOffset
 		} else {
 			offset = low
 		}
+	case "beginning":
+		offset = int64(kafka.OffsetBeginning)
 	default:
 		offset = int64(kafka.OffsetEnd)
 	}
