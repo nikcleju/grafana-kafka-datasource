@@ -23,7 +23,7 @@ const autoResetOffsets = [
   },
   {
     label: 'From the last N',
-    value: AutoOffsetReset.LAST_N,
+    value: AutoOffsetReset.LASTN,
     description: 'Consume from the last N messages',
   },
 ] as Array<SelectableValue<AutoOffsetReset>>;
@@ -81,7 +81,7 @@ export class QueryEditor extends PureComponent<Props> {
     if (value === AutoOffsetReset.BEGINNING) {
       return autoResetOffsets[2];
     }
-    if (value === AutoOffsetReset.LAST_N) {
+    if (value === AutoOffsetReset.LASTN) {
       return autoResetOffsets[3];
     }
     return autoResetOffsets[0];

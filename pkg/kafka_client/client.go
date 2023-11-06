@@ -108,7 +108,7 @@ func (client *KafkaClient) TopicAssign(topic string, partition int32, N int64, a
 		}
 	case "beginning":
 		offset = int64(kafka.OffsetBeginning)
-	case "last_N":
+	case "lastN":
 		low, high, err = client.Consumer.QueryWatermarkOffsets(topic, partition, 100)
 		if err != nil {
 			panic(err)
