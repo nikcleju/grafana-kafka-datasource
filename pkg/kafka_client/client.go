@@ -45,7 +45,7 @@ func (client *KafkaClient) consumerInitialize() {
 	}
 }
 
-func (client *KafkaClient) TopicAssign(topic string, partition int32, autoOffsetReset string,
+func (client *KafkaClient) TopicAssign(topic string, partition int32, N int64, autoOffsetReset string,
 	timestampMode string) {
 	client.consumerInitialize()
 	client.TimestampMode = timestampMode
@@ -67,6 +67,16 @@ func (client *KafkaClient) TopicAssign(topic string, partition int32, autoOffset
 		}
 	case "beginning":
 		offset = int64(kafka.OffsetBeginning)
+	case "last_N":
+		low, high, err = client.Consumer.QueryWatermarkOffsets(topic, partition, 100)
+		if err != nil {
+			panic(err)
+		}
+		if high-low > N {
+			offset = high - N
+		} else {
+			offset = low
+		}
 	default:
 		offset = int64(kafka.OffsetEnd)
 	}
