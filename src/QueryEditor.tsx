@@ -21,6 +21,11 @@ const autoResetOffsets = [
     value: AutoOffsetReset.BEGINNING,
     description: 'Consume from the beginning',
   },
+  {
+    label: 'From the last N',
+    value: AutoOffsetReset.LAST_N,
+    description: 'Consume from the last N messages',
+  },
 ] as Array<SelectableValue<AutoOffsetReset>>;
 
 const timestampModes = [
@@ -51,6 +56,12 @@ export class QueryEditor extends PureComponent<Props> {
     onRunQuery();
   };
 
+  onNChange = (event: ChangeEvent<HTMLInputElement>) => {
+    const { onChange, query, onRunQuery } = this.props;
+    onChange({ ...query, N: parseFloat(event.target.value) });
+    onRunQuery();
+  };
+
   onWithStreamingChange = (event: SyntheticEvent<HTMLInputElement>) => {
     const { onChange, query, onRunQuery } = this.props;
     onChange({ ...query, withStreaming: event.currentTarget.checked });
@@ -70,6 +81,9 @@ export class QueryEditor extends PureComponent<Props> {
     if (value === AutoOffsetReset.BEGINNING) {
       return autoResetOffsets[2];
     }
+    if (value === AutoOffsetReset.LAST_N) {
+      return autoResetOffsets[3];
+    }
     return autoResetOffsets[0];
   };
 
@@ -88,7 +102,7 @@ export class QueryEditor extends PureComponent<Props> {
 
   render() {
     const query = defaults(this.props.query, defaultQuery);
-    const { topicName, partition, withStreaming, autoOffsetReset, timestampMode } = query;
+    const { topicName, partition, N, withStreaming, autoOffsetReset, timestampMode } = query;
 
     return (
       <>
@@ -106,6 +120,15 @@ export class QueryEditor extends PureComponent<Props> {
               className="gf-form-input width-14"
               value={partition}
               onChange={this.onPartitionChange}
+              type="number"
+              step="1"
+              min="0"
+            />
+            <InlineFormLabel width={10}>N</InlineFormLabel>
+            <input
+              className="gf-form-input width-14"
+              value={N}
+              onChange={this.onNChange}
               type="number"
               step="1"
               min="0"

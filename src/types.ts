@@ -4,6 +4,7 @@ export enum AutoOffsetReset {
   EARLIEST = 'earliest',
   LATEST = 'latest',
   BEGINNING = 'beginning',
+  LAST_N = 'last_N',
 }
 
 export enum TimestampMode {
@@ -35,6 +36,7 @@ export interface KafkaSecureJsonData {
 export interface KafkaQuery extends DataQuery {
   topicName: string;
   partition: number;
+  N: number;
   withStreaming: boolean;
   autoOffsetReset: AutoOffsetReset;
   timestampMode: TimestampMode;
@@ -42,6 +44,7 @@ export interface KafkaQuery extends DataQuery {
 
 export const defaultQuery: Partial<KafkaQuery> = {
   partition: 0,
+  N: 0, 
   withStreaming: true,
   autoOffsetReset: AutoOffsetReset.LATEST,
   timestampMode: TimestampMode.Now,

@@ -75,6 +75,7 @@ func (d *KafkaDatasource) QueryData(ctx context.Context, req *backend.QueryDataR
 type queryModel struct {
 	Topic           string `json:"topicName"`
 	Partition       int32  `json:"partition"`
+	N               int64  `json:"N"`
 	WithStreaming   bool   `json:"withStreaming"`
 	AutoOffsetReset string `json:"autoOffsetReset"`
 	TimestampMode   string `json:"timestampMode"`
@@ -98,13 +99,14 @@ func (d *KafkaDatasource) query(_ context.Context, pCtx backend.PluginContext, q
 
 	topic := qm.Topic
 	partition := qm.Partition
+	N := qm.N
 	autoOffsetReset := qm.AutoOffsetReset
 	timestampMode := qm.TimestampMode
 	if qm.WithStreaming {
 		channel := live.Channel{
 			Scope:     live.ScopeDatasource,
 			Namespace: pCtx.DataSourceInstanceSettings.UID,
-			Path:      fmt.Sprintf("%v_%d_%v_%v", topic, partition, autoOffsetReset, timestampMode),
+			Path:      fmt.Sprintf("%v_%d_%d_%v_%v", topic, partition, N, autoOffsetReset, timestampMode),
 		}
 		frame.SetMeta(&data.FrameMeta{Channel: channel.String()})
 	}
@@ -139,10 +141,11 @@ func (d *KafkaDatasource) SubscribeStream(_ context.Context, req *backend.Subscr
 	var path []string = strings.Split(req.Path, "_")
 	topic := path[0]
 	partition, _ := strconv.Atoi(path[1])
-	autoOffsetReset := path[2]
-	timestampMode := path[3]
+	N, _ := strconv.Atoi(path[2])
+	autoOffsetReset := path[3]
+	timestampMode := path[4]
 	// Initialize Consumer and Assign the topic
-	d.client.TopicAssign(topic, int32(partition), autoOffsetReset, timestampMode)
+	d.client.TopicAssign(topic, int32(partition), int64(N), autoOffsetReset, timestampMode)
 	status := backend.SubscribeStreamStatusPermissionDenied
 	status = backend.SubscribeStreamStatusOK
 
