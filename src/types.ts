@@ -44,7 +44,7 @@ export interface KafkaQuery extends DataQuery {
 
 export const defaultQuery: Partial<KafkaQuery> = {
   partition: 0,
-  N: 0, 
+  N: 0,
   withStreaming: true,
   autoOffsetReset: AutoOffsetReset.LATEST,
   timestampMode: TimestampMode.Now,
