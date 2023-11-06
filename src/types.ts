@@ -4,7 +4,7 @@ export enum AutoOffsetReset {
   EARLIEST = 'earliest',
   LATEST = 'latest',
   BEGINNING = 'beginning',
-  LAST_N = 'last_N',
+  LASTN = 'lastN',
 }
 
 export enum TimestampMode {
