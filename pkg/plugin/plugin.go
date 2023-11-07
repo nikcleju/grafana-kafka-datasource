@@ -145,7 +145,7 @@ func (d *KafkaDatasource) CheckHealth(_ context.Context, req *backend.CheckHealt
 func (d *KafkaDatasource) SubscribeStream(_ context.Context, req *backend.SubscribeStreamRequest) (*backend.SubscribeStreamResponse, error) {
 	log.DefaultLogger.Info("SubscribeStream called", "request", req)
 	// Extract the query parameters
-	#var path []string = strings.Split(req.Path, "&")
+	//var path []string = strings.Split(req.Path, "&")
 	var path []string = strings.Split(req.Path, "&")
 	topic := path[0]
 	partition, _ := strconv.Atoi(path[1])
