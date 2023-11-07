@@ -99,15 +99,21 @@ jobs:
           echo "::set-output name=archive-checksum::${GRAFANA_PLUGIN_ARTIFACT_CHECKSUM}"
 
           echo ::set-output name=github-tag::${GITHUB_REF#refs/*/}
+          
+          echo "$plugin-id = ${GRAFANA_PLUGIN_ID}"
+          echo "$plugin-version = ${GRAFANA_PLUGIN_VERSION}"
+          echo "$plugin-type = ${GRAFANA_PLUGIN_TYPE}"
+          echo "$archive = ${GRAFANA_PLUGIN_ARTIFACT}"
+          echo "$archive-checksum = ${GRAFANA_PLUGIN_ARTIFACT_CHECKSUM}"
 
-      - name: Read changelog
+      - name: Read changelogbuild
         id: changelog
         run: |
           awk '/^## / {s++} s == 1 {print}' CHANGELOG.md > release_notes.md
           echo "::set-output name=path::release_notes.md"
 
-      #- name: Check package version
-      #  run: if [ "v${{ steps.metadata.outputs.plugin-version }}" != "${{ steps.metadata.outputs.github-tag }}" ]; then printf "\033[0;31mPlugin version doesn't match tag name\033[0m\n"; exit 1; fi
+      - name: Check package version
+        run: if [ "v${{ steps.metadata.outputs.plugin-version }}" != "${{ steps.metadata.outputs.github-tag }}" ]; then printf "\033[0;31mPlugin version doesn't match tag name\033[0m\n"; exit 1; fi
 
       - name: Package plugin
         id: package-plugin
@@ -117,13 +123,13 @@ jobs:
           md5sum ${{ steps.metadata.outputs.archive }} > ${{ steps.metadata.outputs.archive-checksum }}
           echo "::set-output name=checksum::$(cat ./${{ steps.metadata.outputs.archive-checksum }} | cut -d' ' -f1)"
 
-      #- name: Lint plugin
-      #  run: |
-      #    git clone https://github.com/grafana/plugin-validator
-      #    pushd ./plugin-validator/pkg/cmd/plugincheck
-      #    go install
-      #    popd
-      #    plugincheck ${{ steps.metadata.outputs.archive }}
+      - name: Lint plugin
+        run: |
+          git clone https://github.com/grafana/plugin-validator
+          pushd ./plugin-validator/pkg/cmd/plugincheck
+          go install
+          popd
+          plugincheck ${{ steps.metadata.outputs.archive }}
 
       - name: Create release
         id: create_release
