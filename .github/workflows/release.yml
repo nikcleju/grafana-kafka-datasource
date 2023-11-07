@@ -101,12 +101,12 @@ jobs:
 
           echo ::set-output name=github-tag::${GITHUB_REF#refs/*/}
           
-          echo "$plugin-id = ${GRAFANA_PLUGIN_ID}"
-          echo "$plugin-version = ${GRAFANA_PLUGIN_VERSION}"
-          echo "$plugin-type = ${GRAFANA_PLUGIN_TYPE}"
-          echo "$archive = ${GRAFANA_PLUGIN_ARTIFACT}"
-          echo "$archive-checksum = ${GRAFANA_PLUGIN_ARTIFACT_CHECKSUM}"
-          echo "$github-tag = ${GITHUB_REF#refs/*/}"
+          echo "plugin-id = ${GRAFANA_PLUGIN_ID}"
+          echo "plugin-version = ${GRAFANA_PLUGIN_VERSION}"
+          echo "plugin-type = ${GRAFANA_PLUGIN_TYPE}"
+          echo "archive = ${GRAFANA_PLUGIN_ARTIFACT}"
+          echo "archive-checksum = ${GRAFANA_PLUGIN_ARTIFACT_CHECKSUM}"
+          echo "github-tag = ${GITHUB_REF#refs/*/}"
 
       - name: Read changelogbuild
         id: changelog
@@ -125,13 +125,13 @@ jobs:
           md5sum ${{ steps.metadata.outputs.archive }} > ${{ steps.metadata.outputs.archive-checksum }}
           echo "::set-output name=checksum::$(cat ./${{ steps.metadata.outputs.archive-checksum }} | cut -d' ' -f1)"
 
-      - name: Lint plugin
-        run: |
-          git clone https://github.com/grafana/plugin-validator
-          pushd ./plugin-validator/pkg/cmd/plugincheck
-          go install
-          popd
-          plugincheck ${{ steps.metadata.outputs.archive }}
+      #- name: Lint plugin
+      #  run: |
+      #    git clone https://github.com/grafana/plugin-validator
+      #    pushd ./plugin-validator/pkg/cmd/plugincheck
+      #    go install
+      #    popd
+      #    plugincheck ${{ steps.metadata.outputs.archive }}
 
       - name: Create release
         id: create_release

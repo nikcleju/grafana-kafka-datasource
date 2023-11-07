@@ -24,6 +24,8 @@ var (
 	_ instancemgmt.InstanceDisposer = (*KafkaDatasource)(nil)
 )
 
+const PATHSEP = '|'
+
 func NewKafkaInstance(s backend.DataSourceInstanceSettings) (instancemgmt.Instance, error) {
 	settings, err := getDatasourceSettings(s)
 
@@ -106,7 +108,12 @@ func (d *KafkaDatasource) query(_ context.Context, pCtx backend.PluginContext, q
 		channel := live.Channel{
 			Scope:     live.ScopeDatasource,
 			Namespace: pCtx.DataSourceInstanceSettings.UID,
-			Path:      fmt.Sprintf("%v&%d&%d&%v&%v", topic, partition, N, autoOffsetReset, timestampMode),
+			Path:      fmt.Sprintf("%v%c%d%c%d%c%v%c%v", topic, PATHSEP, 
+														 partition, PATHSEP, 
+														 N, PATHSEP,
+														 autoOffsetReset, PATHSEP,
+														 timestampMode),
+						// Path like: "topic_0_2000_earliest_0", PATHSEP is the separator
 		}
 		frame.SetMeta(&data.FrameMeta{Channel: channel.String()})
 	}
@@ -138,6 +145,7 @@ func (d *KafkaDatasource) CheckHealth(_ context.Context, req *backend.CheckHealt
 func (d *KafkaDatasource) SubscribeStream(_ context.Context, req *backend.SubscribeStreamRequest) (*backend.SubscribeStreamResponse, error) {
 	log.DefaultLogger.Info("SubscribeStream called", "request", req)
 	// Extract the query parameters
+	#var path []string = strings.Split(req.Path, "&")
 	var path []string = strings.Split(req.Path, "&")
 	topic := path[0]
 	partition, _ := strconv.Atoi(path[1])
