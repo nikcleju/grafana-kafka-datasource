@@ -77,7 +77,8 @@ jobs:
           args: build:backend
 
       - name: Sign plugin
-        run: yarn sign
+        #run: yarn sign
+        run: yarn sign --rootUrls http://localhost:3000,http://localhost:80,http://localhost  # Private plugin, must specify rootUrls
         env:
           GRAFANA_API_KEY: ${{ secrets.GRAFANA_API_KEY }} # Requires a Grafana API key from Grafana.com.
 
@@ -105,6 +106,7 @@ jobs:
           echo "$plugin-type = ${GRAFANA_PLUGIN_TYPE}"
           echo "$archive = ${GRAFANA_PLUGIN_ARTIFACT}"
           echo "$archive-checksum = ${GRAFANA_PLUGIN_ARTIFACT_CHECKSUM}"
+          echo "$github-tag = ${GITHUB_REF#refs/*/}"
 
       - name: Read changelogbuild
         id: changelog
