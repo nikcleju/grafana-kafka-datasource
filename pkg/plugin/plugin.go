@@ -24,7 +24,11 @@ var (
 	_ instancemgmt.InstanceDisposer = (*KafkaDatasource)(nil)
 )
 
-const PATHSEP = '|'
+// Scope, namespace and path can only have ASCII alphanumeric symbols (A-Z, a-z, 0-9), 
+//  _ (underscore) and - (dash) at the moment. 
+//  The path part can additionally have /, . and = symbols. 
+//  The meaning of scope, namespace and path is context-specific.
+const PATHSEP = '='
 
 func NewKafkaInstance(s backend.DataSourceInstanceSettings) (instancemgmt.Instance, error) {
 	settings, err := getDatasourceSettings(s)
@@ -146,7 +150,7 @@ func (d *KafkaDatasource) SubscribeStream(_ context.Context, req *backend.Subscr
 	log.DefaultLogger.Info("SubscribeStream called", "request", req)
 	// Extract the query parameters
 	//var path []string = strings.Split(req.Path, "&")
-	var path []string = strings.Split(req.Path, "&")
+	var path []string = strings.Split(req.Path, PATHSEP)
 	topic := path[0]
 	partition, _ := strconv.Atoi(path[1])
 	N, _ := strconv.Atoi(path[2])

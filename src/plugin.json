@@ -2,7 +2,7 @@
   "$schema": "https://raw.githubusercontent.com/grafana/grafana/master/docs/sources/developers/plugins/plugin.schema.json",
   "type": "datasource",
   "name": "Kafka",
-  "id": "hamedkarbasi93-kafka-datasource",
+  "id": "ncleju-kafka-datasource",
   "metrics": true,
   "backend": true,
   "executable": "gpx_kafka-datasource",
@@ -38,7 +38,7 @@
         "path": "img/graph.gif"
       }
     ],
-    "version": "0.2.0-custom10",
+    "version": "0.2.0-custom.11",
     "updated": "%TODAY%"
   },
   "dependencies": {

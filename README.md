@@ -1,4 +1,18 @@
+# Custom Kafka Datasource for Grafana
+
+This is a private, modified version of the original Kafka Datasource for Grafana available here.
+
+It allows to specify additional starting offsets for the topic:
+
+- from beginning
+- from custom N messages before last
+
+All due credits go to the repective authors.
+
+Original README follows.
+
 # Kafka Datasource for Grafana
+
 [![License](https://img.shields.io/github/license/hoptical/grafana-kafka-datasource)](LICENSE)
 [![CI](https://github.com/hoptical/grafana-kafka-datasource/actions/workflows/ci.yml/badge.svg)](https://github.com/hoptical/grafana-kafka-datasource/actions/workflows/ci.yml)
 [![Release](https://github.com/hoptical/grafana-kafka-datasource/actions/workflows/release.yml/badge.svg)](https://github.com/hoptical/grafana-kafka-datasource/actions/workflows/release.yml)
@@ -19,7 +33,8 @@ The Kafka data source plugin allows you to visualize streaming Kafka data from w
 Use the grafana-cli tool to install the plugin from the commandline:
 
 ```bash
-grafana-cli plugins install hamedkarbasi93-kafka-datasource
+# grafana-cli plugins install hamedkarbasi93-kafka-datasource
+grafana-cli plugins install ncleju-kafka-datasource
 ```
 
 The plugin will be installed into your grafana plugins directory; the default is `/var/lib/grafana/plugins`. [More information on the cli tool](https://grafana.com/docs/grafana/latest/administration/cli/#plugins-commands).
