@@ -9,7 +9,7 @@ import (
 )
 
 func main() {
-	if err := datasource.Manage("hamedkarbasi93-kafka-datasource", plugin.NewKafkaInstance, datasource.ManageOpts{}); err != nil {
+	if err := datasource.Manage("ncleju-kafka-datasource", plugin.NewKafkaInstance, datasource.ManageOpts{}); err != nil {
 		log.DefaultLogger.Error(err.Error())
 		os.Exit(1)
 	}
