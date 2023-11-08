@@ -28,7 +28,7 @@ var (
 //  _ (underscore) and - (dash) at the moment. 
 //  The path part can additionally have /, . and = symbols. 
 //  The meaning of scope, namespace and path is context-specific.
-const PATHSEP = '='
+const PATHSEP = "="
 
 func NewKafkaInstance(s backend.DataSourceInstanceSettings) (instancemgmt.Instance, error) {
 	settings, err := getDatasourceSettings(s)
@@ -108,12 +108,12 @@ func (d *KafkaDatasource) query(_ context.Context, pCtx backend.PluginContext, q
 		channel := live.Channel{
 			Scope:     live.ScopeDatasource,
 			Namespace: pCtx.DataSourceInstanceSettings.UID,
-			Path:      fmt.Sprintf("%v%c%d%c%d%c%v%c%v", topic, PATHSEP, 
+			Path:      fmt.Sprintf("%v%s%d%s%d%s%v%s%v", topic, PATHSEP, 
 														 partition, PATHSEP, 
 														 N, PATHSEP,
 														 autoOffsetReset, PATHSEP,
 														 timestampMode),
-						// Path like: "topic_0_2000_earliest_0", PATHSEP is the separator
+						// Path like: "topic=0=2000=earliest=0", PATHSEP is the separator
 		}
 		frame.SetMeta(&data.FrameMeta{Channel: channel.String()})
 	}
