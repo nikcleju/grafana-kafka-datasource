@@ -9,7 +9,7 @@
   "info": {
     "description": "Kafka Datasource Plugin",
     "author": {
-      "name": "Hamed Karbasi",
+      "name": "Hamed Karbasi (custom: Nicolae Cleju)",
       "url": "https://github.com/hoptical"
     },
     "keywords": [
@@ -38,7 +38,7 @@
         "path": "img/graph.gif"
       }
     ],
-    "version": "0.2.0-custom.11",
+    "version": "0.2.0-custom.12",
     "updated": "%TODAY%"
   },
   "dependencies": {
