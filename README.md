@@ -9,6 +9,20 @@ It allows to specify additional starting offsets for the topic:
 
 All due credits go to the repective authors.
 
+## How to build
+
+My instructions:
+
+- do the changes
+- set the upcoming version number in `package.json` and `src\plugin.json` (e.g. `0.2.0-custom.12`)
+- commit
+- the `CI` action should start automatically on push, wait to see if there are no errors
+- create a tag with the same upcoming version number, starting with `v` (e.g. `v0.2.0-custom.12`)
+- the `Release` action should start automatically after tagging, wait to see if all OK
+- the action adds the output automatically to a new release
+- delete previous draft release (which triggered the `Release` action), and update the new release, using the same tag
+
+
 Original README follows.
 
 # Kafka Datasource for Grafana
