@@ -1,16 +1,16 @@
 {
   "$schema": "https://raw.githubusercontent.com/grafana/grafana/master/docs/sources/developers/plugins/plugin.schema.json",
   "type": "datasource",
-  "name": "Kafka",
+  "name": "Kafka (custom)",
   "id": "ncleju-kafka-datasource",
   "metrics": true,
   "backend": true,
   "executable": "gpx_kafka-datasource",
   "info": {
-    "description": "Kafka Datasource Plugin",
+    "description": "Kafka Datasource Plugin (custom)",
     "author": {
       "name": "Hamed Karbasi (custom: Nicolae Cleju)",
-      "url": "https://github.com/hoptical"
+      "url": "https://github.com/ncleju"
     },
     "keywords": [
       "kafka",
@@ -25,11 +25,11 @@
     "links": [
       {
         "name": "Website",
-        "url": "https://github.com/hoptical/grafana-kafka-datasource"
+        "url": "https://github.com/nikcleju/grafana-kafka-datasource"
       },
       {
         "name": "License",
-        "url": "https://github.com/hoptical/grafana-kafka-datasource/blob/main/LICENSE"
+        "url": "https://github.com/ncleju/grafana-kafka-datasource/blob/main/LICENSE"
       }
     ],
     "screenshots": [
@@ -38,7 +38,7 @@
         "path": "img/graph.gif"
       }
     ],
-    "version": "0.2.0-custom.12",
+    "version": "0.2.0-custom.13",
     "updated": "%TODAY%"
   },
   "dependencies": {
