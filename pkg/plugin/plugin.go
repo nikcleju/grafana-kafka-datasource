@@ -99,7 +99,7 @@ func (d *KafkaDatasource) query(_ context.Context, pCtx backend.PluginContext, q
 		data.NewField("values", nil, []int64{0, 0}),
 	)
 
-	#topic := qm.Topic
+	topic := qm.Topic
 	partition := qm.Partition
 	N := qm.N
 	autoOffsetReset := qm.AutoOffsetReset
