@@ -1,6 +1,6 @@
 {
   "name": "ncleju-kafka-datasource",
-  "version": "0.2.0-custom.15",
+  "version": "0.2.0-custom.16",
   "description": "Kafka Datasource Plugin",
   "scripts": {
     "build": "grafana-toolkit plugin:build",

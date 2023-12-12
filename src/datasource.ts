@@ -1,4 +1,4 @@
-import { DataSourceInstanceSettings } from '@grafana/data';
+import { DataSourceInstanceSettings, ScopedVars } from '@grafana/data';
 import { DataSourceWithBackend } from '@grafana/runtime';
 import { KafkaDataSourceOptions, KafkaQuery } from './types';
 
@@ -11,10 +11,13 @@ export class DataSource extends DataSourceWithBackend<KafkaQuery, KafkaDataSourc
 
   // Replace variables before being sent to backend
   // See here: https://community.grafana.com/t/how-to-use-template-variables-in-your-data-source/63250
-  applyTemplateVariables(query: KafkaQuery): Record<string, any> {
+  applyTemplateVariables(query: KafkaQuery, scopedVars: ScopedVars): Record<string, any> {
+    
+    const templateSrv = getTemplateSrv();
+    
     const interpolatedQuery: KafkaQuery = {
       ...query,
-      topicName: getTemplateSrv().replace(query.topicName),
+      topicName: templateSrv.replace(query.topicName, scopedVars),
     };
 
     return interpolatedQuery;
