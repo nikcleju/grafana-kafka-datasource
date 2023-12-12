@@ -17,9 +17,6 @@ import (
 	"github.com/ncleju/grafana-kafka-datasource/pkg/kafka_client"
 )
 
-// For replacing template variables
-import { getTemplateSrv } from '@grafana/runtime';
-
 var (
 	_ backend.QueryDataHandler      = (*KafkaDatasource)(nil)
 	_ backend.CheckHealthHandler    = (*KafkaDatasource)(nil)
@@ -102,15 +99,11 @@ func (d *KafkaDatasource) query(_ context.Context, pCtx backend.PluginContext, q
 		data.NewField("values", nil, []int64{0, 0}),
 	)
 
-	//#topic := qm.Topic
-	topic = getTemplateSrv().replace(qm.Topic);  // Replace template variables
+	#topic := qm.Topic
 	partition := qm.Partition
 	N := qm.N
 	autoOffsetReset := qm.AutoOffsetReset
 	timestampMode := qm.TimestampMode
-
-	
-	
 
 	if qm.WithStreaming {
 		channel := live.Channel{
