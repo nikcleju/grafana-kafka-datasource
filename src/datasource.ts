@@ -18,5 +18,5 @@ export class DataSource extends DataSourceWithBackend<KafkaQuery, KafkaDataSourc
     };
 
     return interpolatedQuery;
-  }  
+  }
 }
