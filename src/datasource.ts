@@ -11,10 +11,10 @@ export class DataSource extends DataSourceWithBackend<KafkaQuery, KafkaDataSourc
 
   // Replace variables before being sent to backend
   // See here: https://community.grafana.com/t/how-to-use-template-variables-in-your-data-source/63250
-  applyTemplateVariables(query: KafkaQuery, scopedVars: ScopedVars): Record<string, any> {
+  applyTemplateVariables(query: KafkaQuery): Record<string, any> {
     const interpolatedQuery: MyQuery = {
       ...query,
-      topicName: getTemplateSrv().replace(topicName, scopedVars),
+      topicName: getTemplateSrv().replace(topicName),
     };
 
     return interpolatedQuery;
