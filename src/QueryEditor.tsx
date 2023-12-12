@@ -5,8 +5,6 @@ import { QueryEditorProps, SelectableValue } from '@grafana/data';
 import { DataSource } from './datasource';
 import { defaultQuery, KafkaDataSourceOptions, KafkaQuery, AutoOffsetReset, TimestampMode } from './types';
 
-import { getTemplateSrv } from '@grafana/runtime';
-
 const autoResetOffsets = [
   {
     label: 'From the last 100',
@@ -48,7 +46,7 @@ type Props = QueryEditorProps<DataSource, KafkaQuery, KafkaDataSourceOptions>;
 export class QueryEditor extends PureComponent<Props> {
   onTopicNameChange = (event: ChangeEvent<HTMLInputElement>) => {
     const { onChange, query, onRunQuery } = this.props;
-    onChange({ ...query, topicName: getTemplateSrv().replace(event.target.value) });
+    onChange({ ...query, topicName: event.target.value });
     onRunQuery();
   };
 
