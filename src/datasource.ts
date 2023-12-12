@@ -14,7 +14,7 @@ export class DataSource extends DataSourceWithBackend<KafkaQuery, KafkaDataSourc
   applyTemplateVariables(query: KafkaQuery): Record<string, any> {
     const interpolatedQuery: KafkaQuery = {
       ...query,
-      rawQuery: getTemplateSrv().replace(rawQuery),
+      topicName: getTemplateSrv().replace(query.topicName),
     };
 
     return interpolatedQuery;
