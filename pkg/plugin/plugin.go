@@ -105,19 +105,19 @@ func (d *KafkaDatasource) query(_ context.Context, pCtx backend.PluginContext, q
 	autoOffsetReset := qm.AutoOffsetReset
 	timestampMode := qm.TimestampMode
 
-	if qm.WithStreaming {
-		channel := live.Channel{
-			Scope:     live.ScopeDatasource,
-			Namespace: pCtx.DataSourceInstanceSettings.UID,
-			Path:      fmt.Sprintf("%v%s%d%s%d%s%v%s%v", topic, PATHSEP, 
-														 partition, PATHSEP, 
-														 N, PATHSEP,
-														 autoOffsetReset, PATHSEP,
-														 timestampMode),
-						// Path like: "topic=0=2000=earliest=0", PATHSEP is the separator
-		}
-		frame.SetMeta(&data.FrameMeta{Channel: channel.String()})
+	// if qm.WithStreaming {
+	channel := live.Channel{
+		Scope:     live.ScopeDatasource,
+		Namespace: pCtx.DataSourceInstanceSettings.UID,
+		Path:      fmt.Sprintf("%v%s%d%s%d%s%v%s%v", topic, PATHSEP, 
+														partition, PATHSEP, 
+														N, PATHSEP,
+														autoOffsetReset, PATHSEP,
+														timestampMode),
+					// Path like: "topic=0=2000=earliest=0", PATHSEP is the separator
 	}
+	frame.SetMeta(&data.FrameMeta{Channel: channel.String()})
+	//}
 
 	response.Frames = append(response.Frames, frame)
 
