@@ -17,36 +17,31 @@ jobs:
     name: Build, lint and unit tests
     runs-on: ubuntu-latest
     outputs:
-      plugin-id: $\{{ steps.metadata.outputs.plugin-id }}
-      plugin-version: $\{{ steps.metadata.outputs.plugin-version }}
-      has-e2e: $\{{ steps.check-for-e2e.outputs.has-e2e }}
-      has-backend: $\{{ steps.check-for-backend.outputs.has-backend }}
+      plugin-id: ${{ steps.metadata.outputs.plugin-id }}
+      plugin-version: ${{ steps.metadata.outputs.plugin-version }}
+      has-e2e: ${{ steps.check-for-e2e.outputs.has-e2e }}
+      has-backend: ${{ steps.check-for-backend.outputs.has-backend }}
     env:
-      GRAFANA_ACCESS_POLICY_TOKEN: $\{{ secrets.GRAFANA_ACCESS_POLICY_TOKEN }}
+      GRAFANA_ACCESS_POLICY_TOKEN: ${{ secrets.GRAFANA_ACCESS_POLICY_TOKEN }}
     steps:
       - uses: actions/checkout@v4
-# {{#if_eq packageManagerName "pnpm"}}
-#       # pnpm action uses the packageManager field in package.json to
-#       # understand which version to install.
-#       - uses: pnpm/action-setup@v3
-# {{/if_eq}}
       - name: Setup Node.js environment
         uses: actions/setup-node@v4
         with:
           node-version: '20'
-          cache: '{{ packageManagerName }}'
+          cache: 'npm'
 
       - name: Install dependencies
-        run: {{ packageManagerInstallCmd }}
+        run: npm ci
 
       - name: Check types
-        run: {{ packageManagerName }} run typecheck
+        run: npm run typecheck
       - name: Lint
-        run: {{ packageManagerName }} run lint
+        run: npm run lint
       - name: Unit tests
-        run: {{ packageManagerName }} run test:ci
+        run: npm run test:ci
       - name: Build frontend
-        run: {{ packageManagerName }} run build
+        run: npm run build
 
       - name: Check for backend
         id: check-for-backend
@@ -85,8 +80,8 @@ jobs:
           fi
 
       - name: Sign plugin
-        run: {{ packageManagerName }} run sign
-        if: $\{{ env.GRAFANA_ACCESS_POLICY_TOKEN != '' }}
+        run: npm run sign
+        if: ${{ env.GRAFANA_ACCESS_POLICY_TOKEN != '' }}
 
       - name: Get plugin metadata
         id: metadata
@@ -104,14 +99,14 @@ jobs:
       - name: Package plugin
         id: package-plugin
         run: |
-          mv dist $\{{ steps.metadata.outputs.plugin-id }}
-          zip $\{{ steps.metadata.outputs.archive }} $\{{ steps.metadata.outputs.plugin-id }} -r
+          mv dist ${{ steps.metadata.outputs.plugin-id }}
+          zip ${{ steps.metadata.outputs.archive }} ${{ steps.metadata.outputs.plugin-id }} -r
 
       - name: Archive Build
         uses: actions/upload-artifact@v4
         with:
-          name: $\{{ steps.metadata.outputs.plugin-id }}-$\{{ steps.metadata.outputs.plugin-version }}
-          path: $\{{ steps.metadata.outputs.plugin-id }}
+          name: ${{ steps.metadata.outputs.plugin-id }}-${{ steps.metadata.outputs.plugin-version }}
+          path: ${{ steps.metadata.outputs.plugin-id }}
           retention-days: 5
 
   resolve-versions:
@@ -119,9 +114,9 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 3
     needs: build
-    if: $\{{ needs.build.outputs.has-e2e == 'true' }}
+    if: ${{ needs.build.outputs.has-e2e == 'true' }}
     outputs:
-      matrix: $\{{ steps.resolve-versions.outputs.matrix }}
+      matrix: ${{ steps.resolve-versions.outputs.matrix }}
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -135,8 +130,8 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        GRAFANA_IMAGE: $\{{fromJson(needs.resolve-versions.outputs.matrix)}}
-    name: e2e test $\{{ matrix.GRAFANA_IMAGE.name }}@$\{{ matrix.GRAFANA_IMAGE.VERSION }}
+        GRAFANA_IMAGE: ${{fromJson(needs.resolve-versions.outputs.matrix)}}
+    name: e2e test ${{ matrix.GRAFANA_IMAGE.name }}@${{ matrix.GRAFANA_IMAGE.VERSION }}
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -145,31 +140,26 @@ jobs:
         uses: actions/download-artifact@v4
         with:
           path: dist
-          name: $\{{ needs.build.outputs.plugin-id }}-$\{{ needs.build.outputs.plugin-version }}
+          name: ${{ needs.build.outputs.plugin-id }}-${{ needs.build.outputs.plugin-version }}
 
       - name: Execute permissions on binary
         if: needs.build.outputs.has-backend == 'true'
         run: |
           chmod +x ./dist/gpx_*
 
-{{#if_eq packageManagerName "pnpm"}}
-      # pnpm action uses the packageManager field in package.json to
-      # understand which version to install.
-      - uses: pnpm/action-setup@v3
-{{/if_eq}}
       - name: Setup Node.js environment
         uses: actions/setup-node@v4
         with:
           node-version: '20'
-          cache: '{{ packageManagerName }}'
+          cache: 'npm'
 
       - name: Install dev dependencies
-        run: {{ packageManagerInstallCmd }}
+        run: npm ci
 
       - name: Start Grafana
         run: |
           docker compose pull
-          DEVELOPMENT=false GRAFANA_VERSION=$\{{ matrix.GRAFANA_IMAGE.VERSION }} GRAFANA_IMAGE=$\{{ matrix.GRAFANA_IMAGE.NAME }} docker compose up -d
+          DEVELOPMENT=false GRAFANA_VERSION=${{ matrix.GRAFANA_IMAGE.VERSION }} GRAFANA_IMAGE=${{ matrix.GRAFANA_IMAGE.NAME }} docker compose up -d
 
       - name: Wait for Grafana to start
         uses: nev7n/wait_for_response@v1
@@ -180,25 +170,25 @@ jobs:
           interval: 500
 
       - name: Install Playwright Browsers
-        run: {{ packageManagerName }} exec playwright install chromium --with-deps
+        run: npm exec playwright install chromium --with-deps
 
       - name: Run Playwright tests
         id: run-tests
-        run: {{ packageManagerName }} run e2e
+        run: npm run e2e
 
       - name: Docker logs
-        if: $\{{ always() && steps.run-tests.outcome == 'failure' }}
+        if: ${{ always() && steps.run-tests.outcome == 'failure' }}
         run: |
-          docker logs {{ pluginId }} >& grafana-server.log
+          docker logs ncleju-kafka-datasource >& grafana-server.log
 
       - name: Stop grafana docker
         run: docker compose down
 
       - name: Upload server log
         uses: actions/upload-artifact@v4
-        if: $\{{ always() && steps.run-tests.outcome == 'failure' }}
+        if: ${{ always() && steps.run-tests.outcome == 'failure' }}
         with:
-          name: $\{{ matrix.GRAFANA_IMAGE.NAME }}-v$\{{ matrix.GRAFANA_IMAGE.VERSION }}-$\{{github.run_id}}-server-log
+          name: ${{ matrix.GRAFANA_IMAGE.NAME }}-v${{ matrix.GRAFANA_IMAGE.VERSION }}-${{github.run_id}}-server-log
           path: grafana-server.log
           retention-days: 5
 
@@ -206,8 +196,8 @@ jobs:
       # If your repository is public, the report will be public on the Internet so beware not to expose sensitive information.
       # - name: Upload artifacts
       #   uses: actions/upload-artifact@v4
-      #   if: $\{{ always() && steps.run-tests.outcome == 'failure' }}
+      #   if: ${{ always() && steps.run-tests.outcome == 'failure' }}
       #   with:
-      #     name: playwright-report-$\{{ matrix.GRAFANA_IMAGE.NAME }}-v$\{{ matrix.GRAFANA_IMAGE.VERSION }}-$\{{github.run_id}}
+      #     name: playwright-report-${{ matrix.GRAFANA_IMAGE.NAME }}-v${{ matrix.GRAFANA_IMAGE.VERSION }}-${{github.run_id}}
       #     path: playwright-report/
       #     retention-days: 5
