@@ -1,8 +1,6 @@
 import { DataSourceInstanceSettings, ScopedVars } from '@grafana/data';
-import { DataSourceWithBackend } from '@grafana/runtime';
+import { DataSourceWithBackend, getTemplateSrv} from '@grafana/runtime';
 import { KafkaDataSourceOptions, KafkaQuery } from './types';
-
-import { getTemplateSrv } from '@grafana/runtime';
 
 export class DataSource extends DataSourceWithBackend<KafkaQuery, KafkaDataSourceOptions> {
   constructor(instanceSettings: DataSourceInstanceSettings<KafkaDataSourceOptions>) {
