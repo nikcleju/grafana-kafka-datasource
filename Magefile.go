@@ -37,3 +37,11 @@ func BuildAll() error {
 	return nil
 }
 
+
+func Coverage() error {
+	return build.Coverage()
+}
+
+func Lint() error {
+	return build.Lint()
+}
