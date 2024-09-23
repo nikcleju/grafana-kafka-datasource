@@ -17,7 +17,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - run: corepack enable  # Nic
-      - run: corepack use yarn@*
+      #- run: corepack use yarn@*
       - uses: grafana/plugin-actions/build-plugin@release
         # Uncomment to enable plugin signing
         # (For more info on how to generate the access policy token see https://grafana.com/developers/plugin-tools/publish-a-plugin/sign-a-plugin#generate-an-access-policy-token)
