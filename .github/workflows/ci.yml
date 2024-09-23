@@ -69,8 +69,8 @@ jobs:
         uses: magefile/mage-action@v3
         with:
           version: latest
-          #args: buildAll
-          args: build:linux
+          args: buildAll
+          #args: build:linux
 
       - name: Check for E2E
         id: check-for-e2e
