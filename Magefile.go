@@ -32,7 +32,7 @@ func BuildAll() error {
 	// Call the Linux build target programmatically
 	b := build.Build{}
 
-	mg.Deps(b.Linux)
+	mg.Deps(b.Linux, b.GenerateManifestFile)
 
 	return nil
 }
