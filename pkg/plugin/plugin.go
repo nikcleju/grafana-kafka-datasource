@@ -24,13 +24,13 @@ var (
 	_ instancemgmt.InstanceDisposer = (*KafkaDatasource)(nil)
 )
 
-// Scope, namespace and path can only have ASCII alphanumeric symbols (A-Z, a-z, 0-9), 
-//  _ (underscore) and - (dash) at the moment. 
-//  The path part can additionally have /, . and = symbols. 
+// Scope, namespace and path can only have ASCII alphanumeric symbols (A-Z, a-z, 0-9),
+//  _ (underscore) and - (dash) at the moment.
+//  The path part can additionally have /, . and = symbols.
 //  The meaning of scope, namespace and path is context-specific.
 const PATHSEP = "="
 
-func NewKafkaInstance(s backend.DataSourceInstanceSettings) (instancemgmt.Instance, error) {
+func NewKafkaInstance(_ context.Context, s backend.DataSourceInstanceSettings) (instancemgmt.Instance, error) {
 	settings, err := getDatasourceSettings(s)
 
 	if err != nil {
@@ -109,8 +109,8 @@ func (d *KafkaDatasource) query(_ context.Context, pCtx backend.PluginContext, q
 	channel := live.Channel{
 		Scope:     live.ScopeDatasource,
 		Namespace: pCtx.DataSourceInstanceSettings.UID,
-		Path:      fmt.Sprintf("%v%s%d%s%d%s%v%s%v", topic, PATHSEP, 
-														partition, PATHSEP, 
+		Path:      fmt.Sprintf("%v%s%d%s%d%s%v%s%v", topic, PATHSEP,
+														partition, PATHSEP,
 														N, PATHSEP,
 														autoOffsetReset, PATHSEP,
 														timestampMode),

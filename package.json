@@ -1,6 +1,6 @@
 {
   "name": "ncleju-kafka-datasource",
-  "version": "0.2.0-custom.18",
+  "version": "0.2.0-custom.19",
   "description": "Kafka Datasource Plugin",
   "scripts": {
     "build": "webpack -c ./.config/webpack/webpack.config.ts --env production",
