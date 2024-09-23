@@ -61,7 +61,7 @@
   "engines": {
     "node": ">=14"
   },
-  "packageManager": "yarn@",
+  "packageManager": "yarn@1.22.22",
   "dependencies": {
     "@emotion/css": "11.10.6",
     "@grafana/data": "latest",
