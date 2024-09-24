@@ -81,7 +81,7 @@ jobs:
           fi
 
       - name: Sign plugin
-        run: npm run sign -- --rootUrls http://localhost:3000,http://localhost:80,http://localhost
+        run: npm run sign -- --rootUrls ${{ secrets.ROOTURLS }}
         if: ${{ env.GRAFANA_ACCESS_POLICY_TOKEN != '' }}
 
       - name: Get plugin metadata

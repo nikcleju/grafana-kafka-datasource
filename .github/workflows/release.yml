@@ -14,17 +14,21 @@ jobs:
     permissions:
       contents: write
     runs-on: ubuntu-latest
+    env:
+      GRAFANA_ACCESS_POLICY_TOKEN: ${{ secrets.GRAFANA_ACCESS_POLICY_TOKEN }}
     steps:
       - uses: actions/checkout@v4
       - run: corepack enable  # Nic
       #- run: corepack use yarn@*
       - run: rm -f yarn.lock
       - run: yarn install
-      - uses: grafana/plugin-actions/build-plugin@release
+      #- uses: grafana/plugin-actions/build-plugin@release
+      - uses: trialsnet-tuiasi-public/grafana-plugin-actions/build-plugin@release-custom
         # Uncomment to enable plugin signing
         # (For more info on how to generate the access policy token see https://grafana.com/developers/plugin-tools/publish-a-plugin/sign-a-plugin#generate-an-access-policy-token)
-        #with:
-        # Make sure to save the token in your repository secrets
-        #policy_token: $
-        # Usage of GRAFANA_API_KEY is deprecated, prefer `policy_token` option above
-        #grafana_token: $
+        with:
+          # Make sure to save the token in your repository secrets
+          policy_token: ${{ secrets.GRAFANA_ACCESS_POLICY_TOKEN }}
+          rootUrls: ${{ secrets.ROOTURLS }}
+          # Usage of GRAFANA_API_KEY is deprecated, prefer `policy_token` option above
+          #grafana_token: $
